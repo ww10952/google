@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tab Manager Pro</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Tab Manager Pro</h1>
+      <div class="stats">
+        <span id="totalTabs">0</span> 标签页
+        <span id="totalGroups">0</span> 分组
+      </div>
+    </header>
+
+    <div class="main-content">
+      <div class="sidebar">
+        <div class="sidebar-header">
+          <h2>分类管理</h2>
+          <button id="createCategoryBtn" class="icon-btn" title="创建新分类">➕</button>
+        </div>
+
+        <div class="category-actions">
+          <button id="expandAllBtn" class="small-btn">展开全部</button>
+          <button id="collapseAllBtn" class="small-btn">折叠全部</button>
+        </div>
+
+        <div id="categoriesList" class="categories-list"></div>
+
+        <div class="category-filters">
+          <button class="category-filter active" data-filter="all">全部标签</button>
+          <button class="category-filter" data-filter="ungrouped">未分组</button>
+        </div>
+      </div>
+
+      <div class="tabs-panel">
+        <div class="search-section">
+          <input type="text" id="searchInput" placeholder="搜索标签页...">
+          <button id="searchBtn">🔍</button>
+        </div>
+
+        <div class="filter-tabs">
+          <button class="filter-btn active" data-filter="all">全部</button>
+          <button class="filter-btn" data-filter="active">活动</button>
+          <button class="filter-btn" data-filter="recent">最近</button>
+        </div>
+
+        <div id="tabsList" class="tabs-list"></div>
+      </div>
+    </div>
+
+    <div class="action-bar">
+      <button id="closeDuplicates" title="关闭重复标签">❌ 关闭重复</button>
+      <button id="saveCollection" title="保存标签页集合">💾 保存集合</button>
+      <button id="loadCollection" title="加载标签页集合">📂 加载集合</button>
+      <button id="showStatistics" title="查看统计">📊 统计</button>
+    </div>
+
+    <div id="categoryModal" class="modal">
+      <div class="modal-content">
+        <h2 id="categoryModalTitle">创建新分类</h2>
+        <input type="text" id="categoryName" placeholder="分类名称">
+        <div class="modal-buttons">
+          <button id="saveCategoryBtn">保存</button>
+          <button id="cancelCategoryBtn">取消</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="groupModal" class="modal">
+      <div class="modal-content">
+        <h2 id="groupModalTitle">创建新分组</h2>
+        <input type="text" id="groupName" placeholder="分组名称">
+        <input type="text" id="groupNote" placeholder="备注信息（可选）">
+        <div class="group-colors">
+          <label>选择颜色:</label>
+          <div class="color-options">
+            <button class="color-option" data-color="grey" style="background: #5f6368"></button>
+            <button class="color-option" data-color="blue" style="background: #1a73e8"></button>
+            <button class="color-option" data-color="red" style="background: #ea4335"></button>
+            <button class="color-option" data-color="yellow" style="background: #fbbc04"></button>
+            <button class="color-option" data-color="green" style="background: #34a853"></button>
+            <button class="color-option" data-color="pink" style="background: #e91e63"></button>
+            <button class="color-option" data-color="purple" style="background: #9c27b0"></button>
+            <button class="color-option" data-color="cyan" style="background: #00bcd4"></button>
+          </div>
+        </div>
+        <input type="hidden" id="selectedGroupId" value="">
+        <input type="hidden" id="selectedCategoryId" value="">
+        <div class="modal-buttons">
+          <button id="saveGroupBtn">保存</button>
+          <button id="cancelGroupBtn">取消</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="collectionModal" class="modal">
+      <div class="modal-content">
+        <h2>保存标签页集合</h2>
+        <input type="text" id="collectionName" placeholder="集合名称">
+        <div class="modal-buttons">
+          <button id="saveCollectionConfirm">保存</button>
+          <button id="cancelSave">取消</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="loadModal" class="modal">
+      <div class="modal-content">
+        <h2>加载标签页集合</h2>
+        <div id="collectionList" class="collection-list"></div>
+        <button id="closeLoadModal">关闭</button>
+      </div>
+    </div>
+
+    <div id="statsModal" class="modal">
+      <div class="modal-content">
+        <h2>标签页使用统计</h2>
+        <div id="statsContent"></div>
+        <button id="closeStatsModal">关闭</button>
+      </div>
+    </div>
+
+    <footer>
+      <button id="openSettings">⚙️ 设置</button>
+    </footer>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

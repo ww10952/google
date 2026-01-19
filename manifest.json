@@ -1,0 +1,38 @@
+{
+  "manifest_version": 3,
+  "name": "Tab Manager Pro",
+  "version": "1.0.0",
+  "description": "强大的标签页管理工具，支持搜索、分组、保存集合、关闭重复等功能",
+  "permissions": [
+    "tabs",
+    "tabGroups",
+    "storage",
+    "sessions",
+    "bookmarks",
+    "history"
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Tab Manager Pro"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "chrome_url_overrides": {
+    "newtab": "newtab.html"
+  },
+  "options_page": "options.html",
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "commands": {
+    "toggle-manager": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+T"
+      },
+      "description": "打开标签页管理器"
+    }
+  }
+}

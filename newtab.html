@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>新标签页 - Tab Manager Pro</title>
+  <link rel="stylesheet" href="newtab.css">
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div class="time-section">
+        <div id="clock" class="clock"></div>
+        <div id="date" class="date"></div>
+      </div>
+      
+      <div class="search-section">
+        <div class="search-wrapper">
+          <input type="text" id="searchInput" placeholder="搜索或输入网址..." autofocus>
+          <button id="searchBtn">🔍</button>
+        </div>
+      </div>
+      
+      <div class="feature-button">
+        <a href="https://tool.pypypk.com/" target="_blank" class="feature-btn">
+          <span class="feature-icon">🛠️</span>
+          <span class="feature-text">工具箱</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="main-content">
+      <div class="groups-overview" id="groups-overview">
+        <div class="section-header">
+          <h2>📁 标签页分组</h2>
+          <button class="small-btn" id="createCategory">创建分类</button>
+        </div>
+        
+        <div class="categories-list" id="categoriesList"></div>
+      </div>
+
+      <div class="history-section">
+        <div class="section-header">
+          <h2>📜 访问历史</h2>
+        </div>
+        
+        <div class="history-list" id="historyList"></div>
+      </div>
+    </div>
+
+    <div class="tabs-sidebar" id="tabsSidebar">
+      <div class="sidebar-header">
+        <h2>📑 打开的标签页</h2>
+        <div class="sidebar-actions">
+          <button class="icon-btn" id="toggleSidebar" title="收起/展开">◀</button>
+          <button class="icon-btn" id="openManager" title="打开管理器">⚙️</button>
+          <button class="icon-btn" id="closeAllTabs" title="关闭所有">❌</button>
+        </div>
+      </div>
+      
+      <div class="sidebar-content" id="sidebarContent">
+        <div class="tabs-list" id="tabsList"></div>
+      </div>
+    </div>
+
+    <div class="footer">
+      <div class="stats-bar">
+        <span id="tabCount">0 个标签页</span>
+        <span>|</span>
+        <span id="groupCount">0 个分组</span>
+        <span>|</span>
+        <button class="link-btn" id="openSettings">⚙️ 设置</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="newtab.js"></script>
+</body>
+</html>

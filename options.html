@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tab Manager Pro - 设置</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background: #f5f5f5;
+      padding: 20px;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 8px;
+      padding: 30px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    h1 {
+      color: #333;
+      margin-bottom: 30px;
+      font-size: 24px;
+    }
+
+    .section {
+      margin-bottom: 30px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid #e0e0e0;
+    }
+
+    .section:last-child {
+      border-bottom: none;
+    }
+
+    .section h2 {
+      font-size: 18px;
+      color: #1a73e8;
+      margin-bottom: 15px;
+    }
+
+    .setting {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 0;
+    }
+
+    .setting label {
+      flex: 1;
+      color: #333;
+      font-size: 14px;
+    }
+
+    .setting input[type="checkbox"] {
+      width: 20px;
+      height: 20px;
+    }
+
+    .setting input[type="number"] {
+      width: 100px;
+      padding: 5px 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+
+    .setting select {
+      padding: 5px 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 14px;
+      min-width: 150px;
+    }
+
+    .setting input[type="text"] {
+      flex: 1;
+      padding: 5px 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+
+    .small-btn {
+      padding: 5px 12px;
+      font-size: 12px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      background: white;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .small-btn:hover {
+      background: #f0f0f0;
+      border-color: #1a73e8;
+    }
+
+    /* 背景预览样式 */
+    body.spring {
+      background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+    }
+
+    body.summer {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+
+    body.autumn {
+      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    }
+
+    body.winter {
+      background: linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%);
+    }
+
+    .description {
+      color: #666;
+      font-size: 12px;
+      margin-top: 5px;
+    }
+
+    .btn-group {
+      display: flex;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    button {
+      padding: 10px 20px;
+      font-size: 14px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      background: white;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    button:hover {
+      background: #f0f0f0;
+      border-color: #1a73e8;
+    }
+
+    button.primary {
+      background: #1a73e8;
+      color: white;
+      border-color: #1a73e8;
+    }
+
+    button.primary:hover {
+      background: #1557b0;
+    }
+
+    button.danger {
+      background: #dc3545;
+      color: white;
+      border-color: #dc3545;
+    }
+
+    button.danger:hover {
+      background: #c82333;
+    }
+
+    .data-management {
+      margin-top: 20px;
+    }
+
+    .data-management h3 {
+      font-size: 16px;
+      color: #333;
+      margin-bottom: 10px;
+    }
+
+    .data-info {
+      background: #f8f9fa;
+      padding: 15px;
+      border-radius: 4px;
+      margin-bottom: 15px;
+      font-size: 13px;
+      color: #666;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Tab Manager Pro - 设置</h1>
+
+    <div class="section">
+      <h2>常规设置</h2>
+      <div class="setting">
+        <label>
+          使用自定义新标签页
+          <div class="description">替换浏览器默认的新标签页</div>
+        </label>
+        <input type="checkbox" id="useCustomNewTab">
+      </div>
+      <div class="setting">
+        <label>
+          自动激活新标签页
+          <div class="description">创建或切换标签页时自动激活</div>
+        </label>
+        <input type="checkbox" id="autoActivate">
+      </div>
+      <div class="setting">
+        <label>
+          显示标签页数量
+          <div class="description">在工具栏图标上显示标签页数量</div>
+        </label>
+        <input type="checkbox" id="showBadge">
+      </div>
+      <div class="setting">
+        <label>
+          最大标签页数限制
+          <div class="description">超过此数量时显示警告</div>
+        </label>
+        <input type="number" id="maxTabs" min="10" max="100" value="50">
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>新标签页背景</h2>
+      <div class="setting">
+        <label>
+          背景类型
+          <div class="description">选择新标签页的背景样式</div>
+        </label>
+        <select id="backgroundType">
+          <option value="seasonal">季节风景</option>
+          <option value="custom">自定义图片</option>
+        </select>
+      </div>
+      <div class="setting" id="seasonalSetting">
+        <label>
+          季节选择
+          <div class="description">选择特定季节或自动切换</div>
+        </label>
+        <select id="seasonalSelect">
+          <option value="auto">自动（根据当前月份）</option>
+          <option value="spring">春季</option>
+          <option value="summer">夏季</option>
+          <option value="autumn">秋季</option>
+          <option value="winter">冬季</option>
+        </select>
+      </div>
+      <div class="setting" id="customBgSetting" style="display: none;">
+        <label>
+          自定义背景图片
+          <div class="description">输入图片URL或点击选择本地图片</div>
+        </label>
+        <div style="display: flex; gap: 10px; align-items: center;">
+          <input type="text" id="customBgUrl" placeholder="https://example.com/image.jpg" style="flex: 1;">
+          <input type="file" id="customBgFile" accept="image/*" style="display: none;">
+          <button id="selectBgFile" class="small-btn">选择文件</button>
+        </div>
+      </div>
+      <div class="setting">
+        <button id="previewBackground" class="small-btn">预览背景</button>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>分组设置</h2>
+      <div class="setting">
+        <label>
+          自动分组相似标签页
+          <div class="description">根据域名自动创建分组</div>
+        </label>
+        <input type="checkbox" id="autoGroup">
+      </div>
+      <div class="setting">
+        <label>
+          默认分组颜色
+          <div class="description">新分组的默认颜色</div>
+        </label>
+        <select id="defaultGroupColor">
+          <option value="grey">灰色</option>
+          <option value="blue">蓝色</option>
+          <option value="red">红色</option>
+          <option value="yellow">黄色</option>
+          <option value="green">绿色</option>
+          <option value="pink">粉色</option>
+          <option value="purple">紫色</option>
+          <option value="cyan">青色</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>数据管理</h2>
+      <div class="data-management">
+        <div class="data-info" id="dataInfo">正在加载数据信息...</div>
+        <div class="btn-group">
+          <button id="exportData">导出数据</button>
+          <button id="importData">导入数据</button>
+          <button id="clearData" class="danger">清除所有数据</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="btn-group">
+      <button id="saveSettings" class="primary">保存设置</button>
+      <button id="resetSettings">重置设置</button>
+    </div>
+  </div>
+
+  <script src="options.js"></script>
+</body>
+</html>

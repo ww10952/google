@@ -250,30 +250,6 @@ function renderTabs() {
   setupTabEventListeners();
 }
 
-function getGroupColorHex(color) {
-  const colorMap = {
-    grey: '#5f6368',
-    blue: '#1a73e8',
-    red: '#ea4335',
-    yellow: '#fbbc04',
-    green: '#34a853',
-    pink: '#e91e63',
-    purple: '#9c27b0',
-    cyan: '#00bcd4'
-  };
-  return colorMap[color] || '#5f6368';
-}
-
-function generateId() {
-  return Date.now() + (idCounter++);
-}
-
-function escapeHtml(text) {
-  const div = document.createElement('div');
-  div.textContent = text;
-  return div.innerHTML;
-}
-
 function setupEventListeners() {
   document.getElementById('searchInput').addEventListener('input', renderTabs);
   

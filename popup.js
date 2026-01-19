@@ -964,7 +964,7 @@ async function showStatistics() {
     sortedDomains.forEach(([domain, count]) => {
       const statValue = document.createElement('div');
       statValue.className = 'stat-value';
-      statValue.textContent = `${escapeHtml(domain)}: ${count} 个标签页`;
+      statValue.textContent = `${domain}: ${count} 个标签页`;
       domainDiv.appendChild(statValue);
     });
     

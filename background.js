@@ -44,7 +44,8 @@ async function trackTabActivity(tabId) {
     
     await chrome.storage.local.set({ tabActivity: activity });
   } catch (error) {
-    console.error('追踪标签页活动失败:', error);
+    // Silent fail for non-critical tab tracking
+    console.warn('追踪标签页活动失败:', error);
   }
 }
 
@@ -56,7 +57,8 @@ async function cleanupTabActivity(tabId) {
       await chrome.storage.local.set({ tabActivity });
     }
   } catch (error) {
-    console.error('清理标签页活动失败:', error);
+    // Silent fail for non-critical cleanup
+    console.warn('清理标签页活动失败:', error);
   }
 }
 

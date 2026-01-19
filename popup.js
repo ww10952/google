@@ -925,6 +925,10 @@ async function showStatistics() {
     }
   });
   
+  if (invalidUrlCount > 0) {
+    console.log(`Skipped ${invalidUrlCount} tabs with invalid URLs during statistics`);
+  }
+  
   const sortedDomains = Object.entries(domainStats)
     .sort((a, b) => b[1] - a[1])
     .slice(0, 10);

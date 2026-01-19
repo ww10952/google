@@ -32,14 +32,22 @@ function getGroupColorHex(color) {
 
 /**
  * Generate unique ID using crypto API
+ * Note: crypto.randomUUID() requires a secure context (HTTPS)
  * @returns {string} - Unique UUID
  */
 function generateId() {
-  // Use crypto.randomUUID() for better ID generation
-  if (crypto && crypto.randomUUID) {
-    return crypto.randomUUID();
+  // Use crypto.randomUUID() for better ID generation in secure contexts
+  if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
+    try {
+      return crypto.randomUUID();
+    } catch (e) {
+      // Fall through to fallback if crypto API fails
+      console.warn('crypto.randomUUID() failed, using fallback');
+    }
   }
-  // Fallback for older browsers
+  
+  // Fallback for non-secure contexts or older browsers
+  // Note: This has lower entropy and higher collision risk than UUID
   return Date.now().toString() + '-' + Math.random().toString(36).substring(2, 11);
 }
 

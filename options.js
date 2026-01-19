@@ -109,7 +109,7 @@ function previewBackground() {
     body.classList.add(currentSeason);
     container.style.background = 'rgba(255, 255, 255, 0.9)';
     container.style.backdropFilter = 'blur(10px)';
-    // Removed blocking alert - preview is self-explanatory
+    // Note: Removed blocking alert for seasonal preview - the visual change is self-explanatory
   } else {
     const url = document.getElementById('customBgUrl').value;
     if (url) {
@@ -119,6 +119,7 @@ function previewBackground() {
       container.style.background = 'rgba(255, 255, 255, 0.9)';
       container.style.backdropFilter = 'blur(10px)';
     } else {
+      // Validation alert is appropriate here - user needs to provide input
       alert('请先输入背景图片URL');
       return;
     }

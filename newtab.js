@@ -688,13 +688,24 @@ function setupHistoryEventListeners() {
           }
         });
         
-        // Use Promise.all() for concurrent deletion
-        await Promise.all(
-          domainItems.map(item => chrome.history.deleteUrl({ url: item.url }))
-        );
+        // Use Promise.all() for concurrent deletion with batching
+        // Process in batches of 50 to avoid overwhelming the API
+        const BATCH_SIZE = 50;
+        for (let i = 0; i < domainItems.length; i += BATCH_SIZE) {
+          const batch = domainItems.slice(i, i + BATCH_SIZE);
+          await Promise.all(
+            batch.map(item => chrome.history.deleteUrl({ url: item.url }))
+          );
+          
+          // Show progress for large deletions
+          if (domainItems.length > BATCH_SIZE) {
+            const progress = Math.min(100, Math.round(((i + batch.length) / domainItems.length) * 100));
+            showNotification(`删除进度: ${progress}%`);
+          }
+        }
         
         await renderHistory();
-        showNotification(`已删除 ${domain} 的访问记录`);
+        showNotification(`已删除 ${domain} 的 ${domainItems.length} 条访问记录`);
       } catch (error) {
         showError('删除历史记录失败', error);
       }

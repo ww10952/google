@@ -48,7 +48,7 @@ async function loadTabs() {
 
     renderTabs();
   } catch (error) {
-    console.error('加载标签页失败:', error);
+    showError('加载标签页失败', error);
   }
 }
 
@@ -68,7 +68,7 @@ async function loadCategories() {
     
     renderCategories();
   } catch (error) {
-    console.error('加载分类失败:', error);
+    showError('加载分类失败', error);
   }
 }
 
@@ -776,17 +776,27 @@ async function activateGroup(groupId) {
 async function closeDuplicates() {
   const urlCount = {};
   const duplicates = [];
+  let invalidUrlCount = 0;
   
   allTabs.forEach(tab => {
-    const url = new URL(tab.url);
-    const key = url.origin + url.pathname;
-    
-    if (urlCount[key]) {
-      duplicates.push(tab.id);
-    } else {
-      urlCount[key] = true;
+    try {
+      const url = new URL(tab.url);
+      const key = url.origin + url.pathname;
+      
+      if (urlCount[key]) {
+        duplicates.push(tab.id);
+      } else {
+        urlCount[key] = true;
+      }
+    } catch (e) {
+      invalidUrlCount++;
+      console.warn('Invalid URL:', tab.url);
     }
   });
+  
+  if (invalidUrlCount > 0) {
+    console.log(`Skipped ${invalidUrlCount} tabs with invalid URLs`);
+  }
   
   if (duplicates.length === 0) {
     alert('没有发现重复的标签页');
@@ -794,8 +804,12 @@ async function closeDuplicates() {
   }
   
   if (confirm(`发现 ${duplicates.length} 个重复的标签页，是否关闭？`)) {
-    await chrome.tabs.remove(duplicates);
-    await loadTabs();
+    try {
+      await chrome.tabs.remove(duplicates);
+      await loadTabs();
+    } catch (error) {
+      showError('关闭重复标签页失败', error);
+    }
   }
 }
 
@@ -831,8 +845,7 @@ async function saveCollection() {
     document.getElementById('collectionModal').classList.remove('show');
     alert('集合保存成功');
   } catch (error) {
-    console.error('保存集合失败:', error);
-    alert('保存集合失败');
+    showError('保存集合失败', error);
   }
 }
 
@@ -900,8 +913,7 @@ async function loadCollection(collectionId) {
     document.getElementById('loadModal').classList.remove('show');
     await loadTabs();
   } catch (error) {
-    console.error('加载集合失败:', error);
-    alert('加载集合失败');
+    showError('加载集合失败', error);
   }
 }
 
@@ -913,8 +925,7 @@ async function deleteCollection(collectionId) {
     const filtered = collections.filter(c => c.id !== collectionId);
     await chrome.storage.local.set({ collections: filtered });
   } catch (error) {
-    console.error('删除集合失败:', error);
-    alert('删除集合失败');
+    showError('删除集合失败', error);
   }
 }
 
@@ -927,11 +938,15 @@ async function showStatistics() {
   const statsContent = document.getElementById('statsContent');
   
   const domainStats = {};
+  let invalidUrlCount = 0;
+  
   allTabs.forEach(tab => {
     try {
       const domain = new URL(tab.url).hostname;
       domainStats[domain] = (domainStats[domain] || 0) + 1;
-    } catch (e) {}
+    } catch (e) {
+      invalidUrlCount++;
+    }
   });
   
   const sortedDomains = Object.entries(domainStats)
@@ -940,30 +955,49 @@ async function showStatistics() {
   
   const ungroupedTabs = allTabs.filter(tab => tab.groupId === chrome.tabGroups.TAB_GROUP_ID_NONE).length;
   
-  statsContent.innerHTML = `
-    <div class="stat-item">
-      <div class="stat-title">总标签页数</div>
-      <div class="stat-value">${allTabs.length}</div>
-    </div>
-    <div class="stat-item">
-      <div class="stat-title">分组数</div>
-      <div class="stat-value">${allGroups.length}</div>
-    </div>
-    <div class="stat-item">
-      <div class="stat-title">分类数</div>
-      <div class="stat-value">${allCategories.length}</div>
-    </div>
-    <div class="stat-item">
-      <div class="stat-title">未分组标签页</div>
-      <div class="stat-value">${ungroupedTabs}</div>
-    </div>
-    <div class="stat-item">
-      <div class="stat-title">最常访问的域名</div>
-      ${sortedDomains.map(([domain, count]) => `
-        <div class="stat-value">${escapeHtml(domain)}: ${count} 个标签页</div>
-      `).join('')}
-    </div>
-  `;
+  // Use DocumentFragment for better performance
+  const fragment = document.createDocumentFragment();
+  
+  // Create stat items
+  const statItems = [
+    { title: '总标签页数', value: allTabs.length },
+    { title: '分组数', value: allGroups.length },
+    { title: '分类数', value: allCategories.length },
+    { title: '未分组标签页', value: ungroupedTabs }
+  ];
+  
+  statItems.forEach(({ title, value }) => {
+    const div = document.createElement('div');
+    div.className = 'stat-item';
+    div.innerHTML = `
+      <div class="stat-title">${title}</div>
+      <div class="stat-value">${value}</div>
+    `;
+    fragment.appendChild(div);
+  });
+  
+  // Add domain stats
+  if (sortedDomains.length > 0) {
+    const domainDiv = document.createElement('div');
+    domainDiv.className = 'stat-item';
+    const domainTitle = document.createElement('div');
+    domainTitle.className = 'stat-title';
+    domainTitle.textContent = '最常访问的域名';
+    domainDiv.appendChild(domainTitle);
+    
+    sortedDomains.forEach(([domain, count]) => {
+      const statValue = document.createElement('div');
+      statValue.className = 'stat-value';
+      statValue.textContent = `${escapeHtml(domain)}: ${count} 个标签页`;
+      domainDiv.appendChild(statValue);
+    });
+    
+    fragment.appendChild(domainDiv);
+  }
+  
+  // Clear and append
+  statsContent.innerHTML = '';
+  statsContent.appendChild(fragment);
   
   document.getElementById('statsModal').classList.add('show');
 }

@@ -10,6 +10,9 @@ let backgroundSettings = {
   customUrl: ''
 };
 let faviconCache = {};
+let historyOffset = 0;
+let allHistoryItems = [];
+let hasMoreHistory = true;
 
 document.addEventListener('DOMContentLoaded', async () => {
   loadBackgroundSettings();
@@ -128,7 +131,7 @@ async function loadTabs() {
     renderCategories(categories);
     renderHistory();
   } catch (error) {
-    console.error('加载标签页失败:', error);
+    showError('加载标签页失败', error);
   }
 }
 
@@ -296,11 +299,16 @@ async function renderHistory() {
   }
   
   try {
+    // Show loading indicator
+    if (historyOffset === 0) {
+      historyList.innerHTML = '<div class="loading-state">加载历史记录中...</div>';
+    }
+    
     console.log('开始加载历史记录...');
     const historyItems = await chrome.history.search({
       text: '',
-      maxResults: 1000,
-      startTime: Date.now() - 30 * 24 * 60 * 60 * 1000
+      maxResults: CONFIG.HISTORY_MAX_RESULTS,
+      startTime: Date.now() - CONFIG.HISTORY_DAYS * 24 * 60 * 60 * 1000
     });
     
     console.log('历史记录数量:', historyItems.length);
@@ -404,7 +412,7 @@ async function renderHistory() {
     console.log('历史记录渲染完成');
     setupHistoryEventListeners();
   } catch (error) {
-    console.error('加载历史记录失败:', error);
+    showError('加载历史记录失败', error);
     historyList.innerHTML = '<div class="empty-state">加载历史记录失败: ' + error.message + '</div>';
   }
 }
@@ -664,6 +672,9 @@ function setupHistoryEventListeners() {
       if (!confirm(`确定要删除 ${domain} 的所有访问历史吗？此操作不可恢复！`)) return;
       
       try {
+        // Show deleting notification
+        showNotification(`正在删除 ${domain} 的访问记录...`);
+        
         const historyItems = await chrome.history.search({
           text: '',
           maxResults: 1000
@@ -677,15 +688,15 @@ function setupHistoryEventListeners() {
           }
         });
         
-        for (const item of domainItems) {
-          await chrome.history.deleteUrl({ url: item.url });
-        }
+        // Use Promise.all() for concurrent deletion
+        await Promise.all(
+          domainItems.map(item => chrome.history.deleteUrl({ url: item.url }))
+        );
         
         await renderHistory();
         showNotification(`已删除 ${domain} 的访问记录`);
       } catch (error) {
-        console.error('删除历史记录失败:', error);
-        showNotification('删除失败');
+        showError('删除历史记录失败', error);
       }
     });
   });
@@ -963,24 +974,12 @@ function performSearch(query) {
   }
 }
 
-function getGroupColorHex(color) {
-  const colorMap = {
-    grey: '#5f6368',
-    blue: '#1a73e8',
-    red: '#ea4335',
-    yellow: '#fbbc04',
-    green: '#34a853',
-    pink: '#e91e63',
-    purple: '#9c27b0',
-    cyan: '#00bcd4'
-  };
-  return colorMap[color] || '#5f6368';
-}
-
-function escapeHtml(text) {
-  const div = document.createElement('div');
-  div.textContent = text;
-  return div.innerHTML;
+function getCurrentSeason() {
+  const month = new Date().getMonth() + 1;
+  if (month >= 3 && month <= 5) return 'spring';
+  if (month >= 6 && month <= 8) return 'summer';
+  if (month >= 9 && month <= 11) return 'autumn';
+  return 'winter';
 }
 
 async function getFaviconUrl(domain) {

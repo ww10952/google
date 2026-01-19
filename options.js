@@ -22,8 +22,7 @@ async function loadSettings() {
     
     updateBackgroundUI();
   } catch (error) {
-    console.error('加载设置失败:', error);
-    alert('加载设置失败，请刷新页面重试');
+    showError('加载设置失败，请刷新页面重试', error);
   }
 }
 
@@ -63,8 +62,7 @@ async function saveCurrentSettings() {
       url: 'chrome://newtab/'
     });
   } catch (error) {
-    console.error('保存设置失败:', error);
-    alert('保存设置失败: ' + error.message);
+    showError('保存设置失败', error);
   }
 }
 
@@ -111,7 +109,7 @@ function previewBackground() {
     body.classList.add(currentSeason);
     container.style.background = 'rgba(255, 255, 255, 0.9)';
     container.style.backdropFilter = 'blur(10px)';
-    alert(`预览${season === 'auto' ? '当前季节' : season}背景`);
+    // Removed blocking alert - preview is self-explanatory
   } else {
     const url = document.getElementById('customBgUrl').value;
     if (url) {
@@ -120,7 +118,6 @@ function previewBackground() {
       body.style.backgroundPosition = 'center';
       container.style.background = 'rgba(255, 255, 255, 0.9)';
       container.style.backdropFilter = 'blur(10px)';
-      alert('预览自定义背景');
     } else {
       alert('请先输入背景图片URL');
       return;
@@ -182,8 +179,7 @@ async function resetSettings() {
     await loadSettings();
     alert('设置已重置');
   } catch (error) {
-    console.error('重置设置失败:', error);
-    alert('重置设置失败: ' + error.message);
+    showError('重置设置失败', error);
   }
 }
 
@@ -276,12 +272,16 @@ async function exportData() {
     a.href = url;
     a.download = `tab-manager-backup-${new Date().toISOString().split('T')[0]}.json`;
     document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
+    
+    try {
+      a.click();
+    } finally {
+      // Ensure cleanup happens even if click fails
+      URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+    }
   } catch (error) {
-    console.error('导出数据失败:', error);
-    alert('导出数据失败: ' + error.message);
+    showError('导出数据失败', error);
   }
 }
 
@@ -311,8 +311,7 @@ async function importData() {
       await loadDataInfo();
       await loadSettings();
     } catch (error) {
-      console.error('导入数据失败:', error);
-      alert('导入数据失败: ' + error.message);
+      showError('导入数据失败', error);
     }
   };
   
@@ -330,8 +329,7 @@ async function clearData() {
     await loadDataInfo();
     await loadSettings();
   } catch (error) {
-    console.error('清除数据失败:', error);
-    alert('清除数据失败: ' + error.message);
+    showError('清除数据失败', error);
   }
 }
 
